@@ -2,13 +2,13 @@
   "name": "2048",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://Harshal-Taori-11.github.io/my-game-2048",
+  "homepage": "https://Harshal-Taori-11.github.io/game-2048",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d dist",
     "lint": "eslint .",
     "preview": "vite preview"
   },
