@@ -19,9 +19,82 @@ function App() {
     [0, 0, 0, 0],
   ];
 
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [lastMove, setLastMove] = useState(null);
+  const [isDirectionLocked, setIsDirectionLocked] = useState(false);
   const [grid, setgrid] = useState(initialGrid);
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(parseInt(localStorage.getItem("bestScore")) || 0);
+
+  const swipeThreshold = 30;
+  const changeDirectionThreshold = 10;
+
+  const handleTouchStart = (e) => {
+    setStartX(e.touches[0].clientX);
+    setStartY(e.touches[0].clientY);
+    setLastMove(null);
+    setIsDirectionLocked(false);
+  };
+
+  const handleTouchMove = (e) => {
+    if (isDirectionLocked) { 
+      return; 
+    }
+
+    let result = { grid: grid, score: score, bestScore: bestScore };
+
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+
+    const diffX = currentX - startX;
+    const diffY = currentY - startY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+
+      // for horizontal movement 
+      if (Math.abs(diffX) > changeDirectionThreshold && lastMove !== 'horizontal') {
+        setIsDirectionLocked(true);
+        if(diffX > 0){ // right movement
+          result = moveRight(grid, score, bestScore);
+        }
+        else{
+          result = moveLeft(grid, score, bestScore);
+        }
+      }
+    } else {
+
+      // for vertical movement
+      if (Math.abs(diffY) > changeDirectionThreshold && lastMove !== 'vertical') {
+        setIsDirectionLocked(true);
+        if(diffY > 0){  //down movement
+          result = moveDown(grid, score, bestScore);
+        }
+        else{
+          result = moveUp(grid, score, bestScore);
+        }
+      }
+    }
+
+
+    if (JSON.stringify(grid) !== JSON.stringify(result.grid)) {
+      const newGrid = addRandomnNumber(result.grid);
+      setgrid(result.grid);
+      setScore(result.score);
+      setBestScore(result.bestScore);
+
+      if (checkGameOver(newGrid)) {
+        alert(" GAME OVER! ");
+        setgrid(initialGrid);
+      }
+    }
+
+  }
+
+
+  const handleTouchEnd = (e) => {
+    setIsDirectionLocked(false);
+  };
 
   const handleKeyDown = useCallback((e) => {
     let result = { grid: grid, score: score, bestScore: bestScore };
@@ -73,7 +146,9 @@ function App() {
   }
 
   return (
-    <>
+    <div onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}>
       <h1>2048 Game</h1>
 
       <div className="Score-Board">
@@ -96,7 +171,7 @@ function App() {
       </div>
 
 
-    </>
+    </div>
   )
 }
 
