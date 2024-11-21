@@ -32,8 +32,6 @@ function App() {
 
   const handleTouchStart = (e) => {
 
-    e.preventDefault(); 
-
     setStartX(e.touches[0].clientX);
     setStartY(e.touches[0].clientY);
     setLastMove(null);
@@ -41,6 +39,8 @@ function App() {
   };
 
   const handleTouchMove = (e) => {
+    e.preventDefault();
+
     if (isDirectionLocked) {
       return;
     }
