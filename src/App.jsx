@@ -31,6 +31,9 @@ function App() {
   const changeDirectionThreshold = 10;
 
   const handleTouchStart = (e) => {
+
+    e.preventDefault(); 
+
     setStartX(e.touches[0].clientX);
     setStartY(e.touches[0].clientY);
     setLastMove(null);
@@ -38,8 +41,8 @@ function App() {
   };
 
   const handleTouchMove = (e) => {
-    if (isDirectionLocked) { 
-      return; 
+    if (isDirectionLocked) {
+      return;
     }
 
     let result = { grid: grid, score: score, bestScore: bestScore };
@@ -55,10 +58,10 @@ function App() {
       // for horizontal movement 
       if (Math.abs(diffX) > changeDirectionThreshold && lastMove !== 'horizontal') {
         setIsDirectionLocked(true);
-        if(diffX > 0){ // right movement
+        if (diffX > 0) { // right movement
           result = moveRight(grid, score, bestScore);
         }
-        else{
+        else {
           result = moveLeft(grid, score, bestScore);
         }
       }
@@ -67,10 +70,10 @@ function App() {
       // for vertical movement
       if (Math.abs(diffY) > changeDirectionThreshold && lastMove !== 'vertical') {
         setIsDirectionLocked(true);
-        if(diffY > 0){  //down movement
+        if (diffY > 0) {  //down movement
           result = moveDown(grid, score, bestScore);
         }
-        else{
+        else {
           result = moveUp(grid, score, bestScore);
         }
       }
@@ -148,7 +151,8 @@ function App() {
   return (
     <div onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}>
+      onTouchEnd={handleTouchEnd}
+      className='window-set'>
       <h1>2048 Game</h1>
 
       <div className="Score-Board">
