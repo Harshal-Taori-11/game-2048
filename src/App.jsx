@@ -27,8 +27,21 @@ function App() {
   const [score, setScore] = useState(0);
   const [bestScore, setBestScore] = useState(parseInt(localStorage.getItem("bestScore")) || 0);
 
-  const swipeThreshold = 30;
   const changeDirectionThreshold = 10;
+
+  const nextProcess = (result) => {
+    if (JSON.stringify(grid) !== JSON.stringify(result.grid)) {
+      const newGrid = addRandomnNumber(result.grid);
+      setgrid(result.grid);
+      setScore(result.score);
+      setBestScore(result.bestScore);
+
+      if (checkGameOver(newGrid)) {
+        alert(" GAME OVER! ");
+        setgrid(initialGrid);
+      }
+    }
+  }
 
   const handleTouchStart = (e) => {
 
@@ -39,8 +52,6 @@ function App() {
   };
 
   const handleTouchMove = (e) => {
-    e.preventDefault();
-
     if (isDirectionLocked) {
       return;
     }
@@ -78,20 +89,7 @@ function App() {
         }
       }
     }
-
-
-    if (JSON.stringify(grid) !== JSON.stringify(result.grid)) {
-      const newGrid = addRandomnNumber(result.grid);
-      setgrid(result.grid);
-      setScore(result.score);
-      setBestScore(result.bestScore);
-
-      if (checkGameOver(newGrid)) {
-        alert(" GAME OVER! ");
-        setgrid(initialGrid);
-      }
-    }
-
+    nextProcess(result);
   }
 
 
@@ -114,17 +112,7 @@ function App() {
       result = moveDown(grid, score, bestScore);
     }
 
-    if (JSON.stringify(grid) !== JSON.stringify(result.grid)) {
-      const newGrid = addRandomnNumber(result.grid);
-      setgrid(result.grid);
-      setScore(result.score);
-      setBestScore(result.bestScore);
-
-      if (checkGameOver(newGrid)) {
-        alert(" GAME OVER! ");
-        setgrid(initialGrid);
-      }
-    }
+    nextProcess(result);
   },
     [grid, score, bestScore]
   );
