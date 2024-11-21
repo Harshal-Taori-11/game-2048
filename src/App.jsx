@@ -151,8 +151,7 @@ function App() {
   return (
     <div onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      className='window-set'>
+      onTouchEnd={handleTouchEnd}>
       <h1>2048 Game</h1>
 
       <div className="Score-Board">
